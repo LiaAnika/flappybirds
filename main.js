@@ -6,6 +6,7 @@ var mainStage = {
      
      //load the bird
      game.load.image('bird', 'assets/bird.png');
+     game.load.image('pipe', 'assets/pipe.png');
  },
     create: function() {
     // this function is called after the perload 
@@ -30,7 +31,15 @@ var mainStage = {
         
         var spaceBar = game.input.keyboard.addkey(             Phaser.keyboard.SPACEBAR);
         spaceBar.ondown.add(this.jump, this)
+        
+        //create an empty group 
+    this.pipes = game.add.group();
+        
+        //timer
+        this.timer = game.time.events.loop(1500, this.addRowofpipes,this); 
     }, 
+    
+    
     
     update:function() { 
     //this function is called 60 times per second 
@@ -52,8 +61,41 @@ var mainStage = {
     //restart game 
     restartGame: function() {
     game.state.start('main');
-    ], 
+    },
+        
+        //add pipe 
+        addOnepipe: function(x, y) {
+            //create positions
+            var pipe = game.add.sprite(x, y, 'pipe');
+            
+            //add pipe
+            this.pipes.add(pipe);
+            
+            //enable the physics
+            game.physics.arcade.enable(pipe);
+            
+            //add velocity to pipe
+            pipe.body.velocity.x = -200;
+            
+            //kill pipe
+            pipe.checkWorldBounds = true;
+            pipe.checkWorldBounds=true;
+        },
+  
+            //many pipes
+            addRowofpipes: function() { 
+                //randomly pick number 1-5 
+                //this will hole the postions
+                var holes = Math.floor(Math.random() * 5) +1;
+                
+                //add 6 pipes
+                for(var i =0; i<8; i++)
+                    if (i != hole&& i !=hole+1)
+                        this.addOnepipe(400, i * 60 + 10); 
+            }, 
 };
+
+
 
 //phaser
 var game = new phaser. game (400,490)
